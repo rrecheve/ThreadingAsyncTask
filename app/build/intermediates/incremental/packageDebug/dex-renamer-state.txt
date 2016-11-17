@@ -1,0 +1,7 @@
+#Thu Nov 17 12:54:11 CET 2016
+base.0=/Users/rre/AndroidStudioProjects/ThreadingAsyncTask/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_90c09d777c4068b23ecf4242e824478e5c9d23ec
+renamed.1=classes.dex
+renamed.0=classes2.dex
+file.1=/Users/rre/AndroidStudioProjects/ThreadingAsyncTask/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_ca0dede88e014e996ef5c0a0d4bce4c82a0e75cb/classes.dex
+base.1=/Users/rre/AndroidStudioProjects/ThreadingAsyncTask/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_ca0dede88e014e996ef5c0a0d4bce4c82a0e75cb
+file.0=/Users/rre/AndroidStudioProjects/ThreadingAsyncTask/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_90c09d777c4068b23ecf4242e824478e5c9d23ec/classes.dex
