@@ -13,30 +13,31 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import java.lang.ref.WeakReference;
+
 public class AsyncTaskActivity extends Activity {
 	
 	private final static String TAG = "ThreadingAsyncTask";
 	
 	private ImageView mImageView;
 	private ProgressBar mProgressBar;
-	private int mDelay = 500;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		mImageView = (ImageView) findViewById(R.id.imageView);;
-		mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+		mImageView = findViewById(R.id.imageView);
+		mProgressBar = findViewById(R.id.progressBar);
 		
-		final Button button = (Button) findViewById(R.id.loadButton);
+		final Button button = findViewById(R.id.loadButton);
 		button.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				new LoadIconTask().execute(R.drawable.painter);
+				new LoadIconTask(AsyncTaskActivity.this).execute(R.drawable.painter);
 			}
 		});
 		
-		final Button otherButton = (Button) findViewById(R.id.otherButton);
+		final Button otherButton = findViewById(R.id.otherButton);
 		otherButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -47,17 +48,32 @@ public class AsyncTaskActivity extends Activity {
 
 	}
 
-	class LoadIconTask extends AsyncTask<Integer, Integer, Bitmap> {
+	private static class LoadIconTask extends AsyncTask<Integer, Integer, Bitmap> {
 
+		private final int mDelay = 500;
+		private final WeakReference<AsyncTaskActivity> activityReference;
+
+		// only retain a weak reference to the activity
+		LoadIconTask(AsyncTaskActivity context) {
+			activityReference = new WeakReference<>(context);
+		}
 
 		@Override
 		protected void onPreExecute() {
-			mProgressBar.setVisibility(ProgressBar.VISIBLE);
+			// get a reference to the activity if it is still there
+			AsyncTaskActivity activity = activityReference.get();
+			if (activity == null || activity.isFinishing()) return;
+
+			activity.mProgressBar.setVisibility(ProgressBar.VISIBLE);
 		}
 
 		@Override
 		protected Bitmap doInBackground(Integer... resId) {
-			Bitmap tmp = BitmapFactory.decodeResource(getResources(), resId[0]);
+			// get a reference to the activity if it is still there
+			AsyncTaskActivity activity = activityReference.get();
+			if (activity == null || activity.isFinishing()) return null;
+
+			Bitmap tmp = BitmapFactory.decodeResource(activity.getResources(), resId[0]);
 			// simulating long-running operation 
 			for (int i = 1; i < 11; i++) {
 				sleep();
@@ -68,13 +84,21 @@ public class AsyncTaskActivity extends Activity {
 
 		@Override
 		protected void onProgressUpdate(Integer... values) {
-			mProgressBar.setProgress(values[0]);
+			// get a reference to the activity if it is still there
+			AsyncTaskActivity activity = activityReference.get();
+			if (activity == null || activity.isFinishing()) return;
+
+			activity.mProgressBar.setProgress(values[0]);
 		}
 
 		@Override
 		protected void onPostExecute(Bitmap result) {
-			mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-			mImageView.setImageBitmap(result);
+			// get a reference to the activity if it is still there
+			AsyncTaskActivity activity = activityReference.get();
+			if (activity == null || activity.isFinishing()) return;
+
+			activity.mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+			activity.mImageView.setImageBitmap(result);
 		}
 
 		private void sleep() {

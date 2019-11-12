@@ -1,13 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "25.0.0"
+    compileSdkVersion 26
 
     defaultConfig {
         applicationId "course.examples.Threading.ThreadingAsyncTask"
         minSdkVersion 19
-        targetSdkVersion 19
+        targetSdkVersion 26
     }
 
     buildTypes {
